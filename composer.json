@@ -1,0 +1,24 @@
+{
+    "name": "a.sharifnezhad/api-doc",
+    "require": {
+        "mpociot/reflection-docblock": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ASharifnezhad\\ApiDoc\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "a.sharifnezhad",
+            "email": "amirhosseinsharifnezhad@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ASharifnezhad\\ApiDoc\\ApiDocServiceProvider"
+            ]
+        }
+    }
+}

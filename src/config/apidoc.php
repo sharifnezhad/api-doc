@@ -1,4 +1,8 @@
 <?php
+
+use ASharifnezhad\ApiDoc\classes\concerns\Methods\GetMethod;
+use ASharifnezhad\ApiDoc\classes\concerns\Methods\PostMethod;
+
 return [
     'url' => 'doc',
     'title' => 'sharif doc',
@@ -51,8 +55,27 @@ return [
         ]
     ],
 
-    'headers' => [
-        'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJod',
+
+    'routes' => [
+        'prefixes' => [
+            '*'
+        ],
+
+        'headers' => [
+            'Authorization' => 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJod',
+        ],
     ],
+    'code_sample' => [
+        'is_enable' => true,
+        'language-tabs' => [
+            'bash' => 'Bash',
+            'javascript' => 'Javascript',
+            'php' => 'PHP',
+        ]
+    ],
+    'methods' => [
+        'GET' => GetMethod::class,
+        'POST' => PostMethod::class
+    ]
 
 ];

@@ -2,8 +2,8 @@
 
 namespace ASharifnezhad\ApiDoc;
 
-use ASharifnezhad\ApiDoc\classes\concerns\DocGenerator;
-use ASharifnezhad\ApiDoc\commands\GenerateApiDocCommand;
+use ASharifnezhad\ApiDoc\Classes\DocGenerator;
+use ASharifnezhad\ApiDoc\Commands\GenerateApiDocCommand;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -11,14 +11,14 @@ class ApiDocServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__ . '/routes/web.php');
-        $this->loadViewsFrom(__DIR__ . '/resources/views', 'apidoc');
-        $this->mergeConfigFrom(__DIR__ . '/config/apidoc.php', 'apidoc');
+        $this->loadRoutesFrom(__DIR__ . '/Routes/web.php');
+        $this->loadViewsFrom(__DIR__ . '/Resources/Views', 'apidoc');
+        $this->mergeConfigFrom(__DIR__ . '/Config/apidoc.php', 'apidoc');
         $this->commands([
             GenerateApiDocCommand::class
         ]);
         $this->publishes([
-            __DIR__ . '/config/apidoc.php' => app()->basePath() . '/config/apidoc.php',
+            __DIR__ . '/Config/apidoc.php' => app()->basePath() . '/config/apidoc.php',
         ], 'apidoc-config');
 
     }

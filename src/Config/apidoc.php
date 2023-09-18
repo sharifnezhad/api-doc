@@ -1,7 +1,7 @@
 <?php
 
-use ASharifnezhad\ApiDoc\classes\concerns\Methods\GetMethod;
-use ASharifnezhad\ApiDoc\classes\concerns\Methods\PostMethod;
+use ASharifnezhad\ApiDoc\Classes\Concerns\Methods\GetMethod;
+use ASharifnezhad\ApiDoc\Classes\Concerns\Methods\PostMethod;
 
 return [
     'url' => 'doc',

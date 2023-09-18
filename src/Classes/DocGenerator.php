@@ -1,9 +1,7 @@
 <?php
 
-namespace ASharifnezhad\ApiDoc\classes\concerns;
+namespace ASharifnezhad\ApiDoc\Classes;
 
-use ASharifnezhad\ApiDoc\classes\concerns\Methods\GetMethod;
-use ASharifnezhad\ApiDoc\classes\concerns\Methods\PostMethod;
 use Illuminate\Routing\Route as RouteClass;
 use Mpociot\Reflection\DocBlock;
 use ReflectionClass;
@@ -30,7 +28,7 @@ class DocGenerator
 
         $routeConfig = collect($this->config['routes']['prefixes'])->map(fn($route) => trim($route, '/'))->toArray();
 
-        if (count($routeConfig) <= 1 && $routeConfig[0] = '*') {
+        if (count($routeConfig) <= 1 && $routeConfig[0] === '*') {
             $this->routes = $routes;
             return $this;
         }
@@ -38,6 +36,7 @@ class DocGenerator
         $this->routes = collect($routes)->filter(function (RouteClass $route) use ($routeConfig) {
             return collect($routeConfig)->first(fn($config) => str_contains($route->uri(), $config));
         });
+
         return $this;
     }
 
@@ -49,6 +48,7 @@ class DocGenerator
                 $uri = $route->uri();
                 $methods = $route->methods();
                 $this->setControllerAndMethod($route);
+                echo "route: {$uri}" . PHP_EOL;
 
                 if (!isset($this->controller)) {
                     return [];
@@ -61,14 +61,14 @@ class DocGenerator
                     return [];
                 }
 
-                $customMethod = app($this->getMethodClass($methods[0]));
-                $pathData = array_merge($pathData, $customMethod->methodParams([
+                $customMethod = app($this->getHttpMethodClass($methods[0]));
+                $pathData = array_merge($pathData, $customMethod->methodParams($phpDocClass, $phpDocMethod, [
                     'uri' => $uri,
                     'methods' => $methods,
                     'headers' => $this->headers,
                     'bodyParameters' => $phpDocMethod->getTagsByName('bodyParam'),
                     'queryParameters' => $phpDocMethod->getTagsByName('pathParam')
-                ], $phpDocClass, $phpDocMethod));
+                ]));
 
                 return [$uri => $pathData];
 
@@ -130,7 +130,7 @@ class DocGenerator
         return new DocBlock($method);
     }
 
-    private function getMethodClass(string $method)
+    private function getHttpMethodClass(string $method)
     {
         return $this->config['methods'][$method];
     }

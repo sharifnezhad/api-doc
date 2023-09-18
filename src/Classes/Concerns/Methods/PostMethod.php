@@ -1,6 +1,6 @@
 <?php
 
-namespace ASharifnezhad\ApiDoc\classes\concerns\Methods;
+namespace ASharifnezhad\ApiDoc\Classes\Concerns\Methods;
 
 use Mpociot\Reflection\DocBlock;
 use Mpociot\Reflection\DocBlock\Tag;
@@ -12,19 +12,17 @@ class PostMethod extends Method
         parent::__construct($config);
     }
 
-    public function methodParams($route, Docblock $classData, Docblock $methodData): array
+    public function methodParams(Docblock $classData, Docblock $methodData, $customData): array
     {
-        return [
-            'post' => [
-                'security' => [$this->setSecurity($methodData->getTagsByName('authenticated'))],
-                'tags' => [$classData->getTagsByName('group')[0]->getContent()],
-                'operationId' => $methodData->getShortDescription(),
-                'description' => $methodData->getLongDescription()->getContents() ?? '',
-                'requestBody' => $methodData->hasTag('bodyParam') ? $this->setParameters($methodData->getTagsByName('bodyParam')) : [],
-                'responses' => $methodData->hasTag('response') ? $this->setResponses($methodData->getTagsByName('response')) : null,
-                'x-code-samples' => $this->codeSample($route)
+        $this->classData = $classData;
+        $this->methodData = $methodData;
 
-            ]
+        $postMethodParams = array_merge($this->setDefaultParams($customData), [
+            'requestBody' => $methodData->hasTag('bodyParam') ? $this->setParameters($methodData->getTagsByName('bodyParam')) : [],
+            'responses' => $methodData->hasTag('response') ? $this->setResponses($methodData->getTagsByName('response')) : null,
+        ]);
+        return [
+            'post' => $postMethodParams
         ];
     }
 

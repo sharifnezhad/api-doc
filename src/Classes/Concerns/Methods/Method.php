@@ -1,6 +1,6 @@
 <?php
 
-namespace ASharifnezhad\ApiDoc\classes\concerns\Methods;
+namespace ASharifnezhad\ApiDoc\Classes\Concerns\Methods;
 
 use Mpociot\Reflection\DocBlock;
 use Mpociot\Reflection\DocBlock\Tag;
@@ -8,13 +8,15 @@ use Mpociot\Reflection\DocBlock\Tag;
 abstract class Method
 {
     protected array $config;
+    protected Docblock $classData;
+    protected Docblock $methodData;
 
     public function __construct($config)
     {
         $this->config = $config;
     }
 
-    abstract public function methodParams($route, Docblock $classData, Docblock $methodData): array;
+    abstract public function methodParams(Docblock $classData, Docblock $methodData, $customData): array;
 
     abstract public function setParameters(array $pathParams);
 
@@ -36,30 +38,6 @@ abstract class Method
                 ]
             ];
         });
-    }
-
-    public function setSecurity($securityTag)
-    {
-        if (empty($securityTag)) {
-            return [];
-
-        }
-
-        return collect($securityTag)->mapWithKeys(function (Tag $tag) {
-            if (empty($tag->getContent())) {
-                return [
-                    array_key_first(config('apidoc.security')) => []
-                ];
-            }
-            $authData = explode(' ', $tag->getContent());
-            $scopes = isset($authData[1]) ? explode(':', $authData[1]) : null;
-            $scopes = isset($scopes[1]) ? explode(',', $scopes[1]) : [];
-
-            return [
-                $authData[0] => $scopes
-            ];
-        });
-
     }
 
     public function codeSample($route)
@@ -91,8 +69,52 @@ abstract class Method
         return collect($this->config['code_sample']['language-tabs'])->map(function ($name, $lang) use ($route) {
             return [
                 'lang' => $name,
-                'source' => view('apidoc::languages.' . $lang, compact('route'))->render(),
+                'source' => view('apidoc::Languages.' . $lang, compact('route'))->render(),
             ];
         })->values()->toArray();
     }
+
+
+    public function setDefaultParams($customData)
+    {
+        return [
+            'security' => [$this->setSecurity($this->methodData->getTagsByName('authenticated'))],
+            'tags' => $this->setTags($this->classData->getTagsByName('group')),
+            'operationId' => $this->methodData->getShortDescription(),
+            'description' => $this->methodData->getLongDescription()->getContents() ?? '',
+            'x-code-samples' => $this->codeSample($customData)
+        ];
+    }
+
+    private function setTags($tags)
+    {
+        return collect($tags)->map(function (Tag $tag){
+            return $tag->getContent();
+        });
+    }
+    private function setSecurity($securityTag)
+    {
+        if (empty($securityTag)) {
+            return [];
+
+        }
+
+        return collect($securityTag)->mapWithKeys(function (Tag $tag) {
+            if (empty($tag->getContent())) {
+                return [
+                    array_key_first(config('apidoc.security')) => []
+                ];
+            }
+            $authData = explode(' ', $tag->getContent());
+            $scopes = isset($authData[1]) ? explode(':', $authData[1]) : null;
+            $scopes = isset($scopes[1]) ? explode(',', $scopes[1]) : [];
+
+            return [
+                $authData[0] => $scopes
+            ];
+        });
+
+    }
+
+
 }

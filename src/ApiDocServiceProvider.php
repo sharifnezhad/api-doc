@@ -33,7 +33,7 @@ class ApiDocServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__ . '/Resources/Views', 'apidoc');
         $this->publishes([
             __DIR__ . '/Resources/Views/CodeSamples' => $this->app->basePath() . '/resources/views/CodeSamples'
-        ], 'apidoc-views');
+        ], 'apidoc-code-sample');
     }
 
     private function loadConfigs()

@@ -60,7 +60,7 @@ return [
 
     'routes' => [
         'prefixes' => [
-            '*'
+            'api/'
         ],
 
         'headers' => [

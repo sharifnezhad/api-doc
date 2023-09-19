@@ -48,7 +48,6 @@ class DocGenerator
                 $uri = $route->uri();
                 $methods = $route->methods();
                 $this->setControllerAndMethod($route);
-                echo "route: {$uri}" . PHP_EOL;
 
                 if (!isset($this->controller)) {
                     return [];
@@ -60,6 +59,7 @@ class DocGenerator
                 if (empty($phpDocMethod->getTags()) || empty($phpDocClass->getTags())) {
                     return [];
                 }
+                echo "route: {$uri} method: {$methods[0]}" . PHP_EOL;
 
                 $customMethod = app($this->getHttpMethodClass($methods[0]));
                 $pathData = array_merge($pathData, $customMethod->methodParams($phpDocClass, $phpDocMethod, [

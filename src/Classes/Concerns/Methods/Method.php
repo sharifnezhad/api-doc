@@ -45,6 +45,8 @@ abstract class Method
         if (!$this->config['code_sample']['is_enable']) {
             return [];
         }
+
+        $viewDirectory = empty($this->config['code_sample']['directory']) ? 'apidoc::CodeSamples' : $this->config['code_sample']['directory'];
         $route['bodyParameters'] = collect($route['bodyParameters'])->mapWithKeys(function (Tag $tag) {
             $data = json_decode($tag->getContent());
 
@@ -66,10 +68,10 @@ abstract class Method
             ];
         })->toArray();
 
-        return collect($this->config['code_sample']['language-tabs'])->map(function ($name, $lang) use ($route) {
+        return collect($this->config['code_sample']['language-tabs'])->map(function ($name, $lang) use ($route, $viewDirectory) {
             return [
                 'lang' => $name,
-                'source' => view('apidoc::Languages.' . $lang, compact('route'))->render(),
+                'source' => view("{$viewDirectory}.{$lang}", compact('route'))->render(),
             ];
         })->values()->toArray();
     }

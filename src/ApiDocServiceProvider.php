@@ -11,16 +11,10 @@ class ApiDocServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        $this->loadRoutesFrom(__DIR__ . '/Routes/web.php');
-        $this->loadViewsFrom(__DIR__ . '/Resources/Views', 'apidoc');
-        $this->mergeConfigFrom(__DIR__ . '/Config/apidoc.php', 'apidoc');
-        $this->commands([
-            GenerateApiDocCommand::class
-        ]);
-        $this->publishes([
-            __DIR__ . '/Config/apidoc.php' => app()->basePath() . '/config/apidoc.php',
-        ], 'apidoc-config');
-
+        $this->loadViews();
+        $this->loadConfigs();
+        $this->loadCommands();
+        $this->loadRoutes();
     }
 
     public function register()
@@ -32,5 +26,33 @@ class ApiDocServiceProvider extends ServiceProvider
         collect(config('apidoc.methods'))->each(function ($method) {
             $this->app->bind($method, fn(Application $app) => new $method(config('apidoc')));
         });
+    }
+
+    private function loadViews()
+    {
+        $this->loadViewsFrom(__DIR__ . '/Resources/Views', 'apidoc');
+        $this->publishes([
+            __DIR__ . '/Resources/Views/CodeSamples' => $this->app->basePath() . '/resources/views/CodeSamples'
+        ], 'apidoc-views');
+    }
+
+    private function loadConfigs()
+    {
+        $this->mergeConfigFrom(__DIR__ . '/Config/apidoc.php', 'apidoc');
+        $this->publishes([
+            __DIR__ . '/Config/apidoc.php' => app()->basePath() . '/config/apidoc.php',
+        ], 'apidoc-config');
+    }
+
+    private function loadCommands(): void
+    {
+        $this->commands([
+            GenerateApiDocCommand::class
+        ]);
+    }
+
+    private function loadRoutes(): void
+    {
+        $this->loadRoutesFrom(__DIR__ . '/Routes/web.php');
     }
 }

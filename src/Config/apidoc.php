@@ -2,6 +2,8 @@
 
 use ASharifnezhad\ApiDoc\Classes\Concerns\Methods\GetMethod;
 use ASharifnezhad\ApiDoc\Classes\Concerns\Methods\PostMethod;
+use ASharifnezhad\ApiDoc\Classes\Concerns\Methods\PutMethod;
+use ASharifnezhad\ApiDoc\Classes\Concerns\Methods\DeleteMethod;
 
 return [
     'url' => 'doc',
@@ -67,6 +69,7 @@ return [
     ],
     'code_sample' => [
         'is_enable' => true,
+        'directory' => 'CodeSamples',
         'language-tabs' => [
             'bash' => 'Bash',
             'javascript' => 'Javascript',
@@ -75,7 +78,9 @@ return [
     ],
     'methods' => [
         'GET' => GetMethod::class,
-        'POST' => PostMethod::class
+        'POST' => PostMethod::class,
+        'PUT' => PutMethod::class,
+        'DELETE' => DeleteMethod::class
     ]
 
 ];

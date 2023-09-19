@@ -1,5 +1,6 @@
 {
     "name": "a.sharifnezhad/api-doc",
+    "version": "1.0.0",
     "require": {
         "mpociot/reflection-docblock": "^1.0"
     },

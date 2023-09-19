@@ -17,7 +17,6 @@
         }
     ],
     "extra": {
-        "image": "https://avatars.githubusercontent.com/u/83763809?v=4",
         "laravel": {
             "providers": [
                 "ASharifnezhad\\ApiDoc\\ApiDocServiceProvider"
